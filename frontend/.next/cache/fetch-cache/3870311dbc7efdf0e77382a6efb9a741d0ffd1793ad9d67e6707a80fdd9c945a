@@ -1,0 +1,1 @@
+{"kind":"FETCH","data":{"headers":{"content-length":"20","content-type":"application/json","date":"Tue, 17 Sep 2024 11:23:17 GMT","server":"uvicorn"},"body":"eyJzdGF0dXMiOiJoZWFsdGh5In0=","status":200,"url":"http://127.0.0.1:8000/healthy"},"revalidate":31536000,"tags":[]}
