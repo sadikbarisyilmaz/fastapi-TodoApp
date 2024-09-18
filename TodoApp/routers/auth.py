@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+from math import log
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -117,4 +118,14 @@ def login_for_access_token(form_data:Annotated[OAuth2PasswordRequestForm,Depends
 
 
     return  {"access_token":token,"token_type":"bearer"}
+
+@router.post("/login")
+def login_for_user(form_data:Annotated[OAuth2PasswordRequestForm,Depends()],db:db_dependency):
+
+    user = authenticate_user(form_data.username,form_data.password,db)
+    if not user:
+         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not validate user.')
+    user.hashed_password=""
+    return  user
 
