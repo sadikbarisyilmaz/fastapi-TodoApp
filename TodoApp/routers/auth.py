@@ -39,6 +39,7 @@ class CreateUserRequest(BaseModel):
 class Token(BaseModel):
     access_token:str
     token_type:str
+    expires_at:str
 
 def get_db():
     db = SessionLocal()
@@ -63,11 +64,13 @@ def authenticate_user(username: str, password: str, db):
     if not bcrypt_context.verify(password, user.hashed_password):
         return False
     return user
+
 def create_access_token(username:str,user_id:int, role:str, expires_delta:timedelta):
     encode = {"sub": username, "id": user_id,"role":role}
     expires = datetime.now(timezone.utc) + expires_delta
     encode.update({"exp":expires})
     return jwt.encode(encode,SECRET_KEY,algorithm=ALGORITHM)
+
 def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -114,10 +117,10 @@ def login_for_access_token(form_data:Annotated[OAuth2PasswordRequestForm,Depends
          raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail='Could not validate user.')
 
-    token = create_access_token(user.username, user.id, user.role,timedelta(minutes=20))
+    token = create_access_token(user.username, user.id, user.role,timedelta(minutes=2))
+    expires_at = datetime.now(timezone.utc) + timedelta(minutes=2)
 
-
-    return  {"access_token":token,"token_type":"bearer"}
+    return  {"access_token":token,"token_type":"bearer","expires_at":expires_at.isoformat()}
 
 @router.post("/login")
 def login_for_user(form_data:Annotated[OAuth2PasswordRequestForm,Depends()],db:db_dependency):
@@ -128,4 +131,27 @@ def login_for_user(form_data:Annotated[OAuth2PasswordRequestForm,Depends()],db:d
                                 detail='Could not validate user.')
     user.hashed_password=""
     return  user
+
+
+# @router.post("/token",response_model=Token)
+# def login_for_access_token(payload:LoginRequest,db:db_dependency):
+
+#     user = authenticate_user(payload.username,payload.password,db)
+#     if not user:
+#          raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+#                                 detail='Could not validate user.')
+
+#     token = create_access_token(user.username, user.id, user.role,timedelta(minutes=20))
+
+#     return  {"access_token":token,"token_type":"bearer"}
+
+# @router.post("/login")
+# def login_for_user(payload:LoginRequest,db:db_dependency):
+#     print(payload.username,payload.password)
+#     user = authenticate_user(payload.username,payload.password,db)
+#     if not user:
+#          raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+#                                 detail='Could not validate user.')
+#     user.hashed_password=""
+#     return  user
 
