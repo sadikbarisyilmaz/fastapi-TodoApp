@@ -117,8 +117,8 @@ def login_for_access_token(form_data:Annotated[OAuth2PasswordRequestForm,Depends
          raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail='Could not validate user.')
 
-    token = create_access_token(user.username, user.id, user.role,timedelta(minutes=2))
-    expires_at = datetime.now(timezone.utc) + timedelta(minutes=2)
+    token = create_access_token(user.username, user.id, user.role,timedelta(minutes=30))
+    expires_at = datetime.now(timezone.utc) + timedelta(minutes=30)
 
     return  {"access_token":token,"token_type":"bearer","expires_at":expires_at.isoformat()}
 

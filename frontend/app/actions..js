@@ -44,7 +44,6 @@ export const readAll = async () => {
     const session = await auth();
     const tokenExpt = new Date(session.accessToken.expires_at)
     if (tokenExpt < new Date) {
-        console.log("expiredddddddddddddddddddddddd");
         await signOut()
         return
     } else {
@@ -105,5 +104,79 @@ export const token = async (username, password) => {
         return json
     } catch (error) {
         console.error(error.message);
+    }
+}
+
+export const getUser = async () => {
+    const session = await auth();
+    const tokenExpt = new Date(session.accessToken.expires_at)
+    if (tokenExpt < new Date) {
+        await signOut()
+        return
+    } else {
+        try {
+            const response = await fetch(`${API_URL}/users`, {
+                headers: {
+                    'Authorization': `Bearer ${session.accessToken.access_token}`
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            const json = await response.json();
+            return json
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+}
+export const ChangePhoneNumber = async (num) => {
+    const session = await auth();
+    const tokenExpt = new Date(session.accessToken.expires_at)
+    if (tokenExpt < new Date) {
+        await signOut()
+        return
+    } else {
+        try {
+            const response = await fetch(`${API_URL}/users/phone/${num}`, {
+                method: "PUT",
+                headers: {
+                    'Authorization': `Bearer ${session.accessToken.access_token}`
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            const json = await response.json();
+            return json
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+}
+export const ChangePassword = async (values) => {
+    const session = await auth();
+    const tokenExpt = new Date(session.accessToken.expires_at)
+    if (tokenExpt < new Date) {
+        await signOut()
+        return
+    } else {
+        try {
+            const response = await fetch(`${API_URL}/users`, {
+                method: "PUT",
+                headers: {
+                    'Authorization': `Bearer ${session.accessToken.access_token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(values),
+            });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            const json = await response.json();
+            return json
+        } catch (error) {
+            console.error(error.message);
+        }
     }
 }

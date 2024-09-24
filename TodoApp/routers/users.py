@@ -64,7 +64,7 @@ def change_password(user: user_dependency, db:db_dependency,change_password_requ
     user_model = db.query(Users).filter(Users.username == user.get("username")).first()
 
     if user_model is None:
-        raise HTTPException(status_code=404,detail="Todo not found")
+        raise HTTPException(status_code=404,detail="User not found")
     
     if not bcrypt_context.verify(change_password_request.current_password,user_model.hashed_password):
          raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
