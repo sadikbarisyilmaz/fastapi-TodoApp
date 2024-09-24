@@ -11,10 +11,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Separator } from "./ui/separator";
-import { ChangePassword } from "@/app/actions.";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Separator } from "../ui/separator";
+import { changePassword } from "@/app/actions.";
 
 const formSchema = z
   .object({
@@ -38,7 +38,7 @@ export const EditUserPasswordForm = () => {
   });
   const onSubmit = async (values) => {
     try {
-      ChangePassword({
+      changePassword({
         current_password: values.currentPassword,
         new_password: values.newPassword,
       });

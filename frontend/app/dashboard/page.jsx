@@ -1,19 +1,39 @@
 import { SignOut } from "@/components/sign-out";
-import { getUser } from "../actions.";
+import { getTodos, getUser } from "../actions.";
 import { Separator } from "@/components/ui/separator";
-import { EditPhoneForm } from "@/components/EditPhoneForm";
-import { GetUserButton } from "@/components/getUserButton";
-import { EditUserPasswordForm } from "@/components/EditPassword";
+import { EditPhoneForm } from "@/components/forms/EditPhoneForm";
+import { EditUserPasswordForm } from "@/components/forms/EditPasswordForm";
+import { DeleteTodoButton } from "@/components/DeleteTodoButton";
+import { CreateTodoForm } from "@/components/forms/CreateTodoForm";
+import Link from "next/link";
 
 export default async function Page() {
   const user = await getUser();
   console.log(user);
+  const todos = await getTodos();
+  console.log(todos);
+
   return (
     <div className="flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-4 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <h1 className="text-3xl font-bold">Dashboard</h1>
       <div className="flex gap-2">
-        <GetUserButton />
         <SignOut />
+        {/* <GetUserButton /> */}
+      </div>
+      <div className="flex flex-col w-full gap-2">
+        <h2 className="text-xl font-bold">Todos</h2>
+        {todos.map((todo, i) => {
+          return (
+            <li className="pl-3" id={i}>
+              {todo.title}
+              <DeleteTodoButton id={todo.id} />
+              <Link href={`/dashboard/${todo.id}`}>Edit</Link>
+            </li>
+          );
+        })}
+      </div>
+      <div className="w-full">
+        <CreateTodoForm />
       </div>
       <div className="grid grid-cols-2 w-full">
         <div className="grid border-r-0 border border-black/40">

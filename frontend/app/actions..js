@@ -1,6 +1,7 @@
 "use server"
 
 import { auth, signOut } from "@/auth";
+import { revalidatePath } from "next/cache";
 const API_URL = "http://127.0.0.1:8000";
 
 const checkAccessToken = async (accessToken) => {
@@ -12,7 +13,6 @@ const checkAccessToken = async (accessToken) => {
         return session
     }
 }
-
 export const healtCheck = async () => {
     try {
         const response = await fetch(`${API_URL}/healthy`);
@@ -26,6 +26,7 @@ export const healtCheck = async () => {
     }
 }
 
+// /admin
 export const getUsers = async () => {
     try {
         const response = await fetch(`${API_URL}/auth`);
@@ -39,7 +40,6 @@ export const getUsers = async () => {
         console.error(error.message);
     }
 }
-
 export const readAll = async () => {
     const session = await auth();
     const tokenExpt = new Date(session.accessToken.expires_at)
@@ -63,6 +63,8 @@ export const readAll = async () => {
         }
     }
 }
+
+// /auth
 export const dbLogin = async (username, password) => {
     const payload = new URLSearchParams();
     payload.append("username", username);
@@ -107,6 +109,7 @@ export const token = async (username, password) => {
     }
 }
 
+// /users
 export const getUser = async () => {
     const session = await auth();
     const tokenExpt = new Date(session.accessToken.expires_at)
@@ -130,7 +133,7 @@ export const getUser = async () => {
         }
     }
 }
-export const ChangePhoneNumber = async (num) => {
+export const changePhoneNumber = async (num) => {
     const session = await auth();
     const tokenExpt = new Date(session.accessToken.expires_at)
     if (tokenExpt < new Date) {
@@ -153,8 +156,10 @@ export const ChangePhoneNumber = async (num) => {
             console.error(error.message);
         }
     }
+    revalidatePath("/dashboard")
+
 }
-export const ChangePassword = async (values) => {
+export const changePassword = async (values) => {
     const session = await auth();
     const tokenExpt = new Date(session.accessToken.expires_at)
     if (tokenExpt < new Date) {
@@ -179,4 +184,136 @@ export const ChangePassword = async (values) => {
             console.error(error.message);
         }
     }
+}
+
+// /todo
+export const getTodos = async () => {
+    const session = await auth();
+    const tokenExpt = new Date(session.accessToken.expires_at)
+    if (tokenExpt < new Date) {
+        await signOut()
+        return
+    } else {
+        try {
+            const response = await fetch(`${API_URL}/todo`, {
+                headers: {
+                    'Authorization': `Bearer ${session.accessToken.access_token}`
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            const json = await response.json();
+            return json
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+    revalidatePath("/dashboard")
+}
+export const getTodo = async (id) => {
+    const session = await auth();
+    const tokenExpt = new Date(session.accessToken.expires_at)
+    if (tokenExpt < new Date) {
+        await signOut()
+        return
+    } else {
+        try {
+            const response = await fetch(`${API_URL}/todo/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${session.accessToken.access_token}`
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            const json = await response.json();
+            return json
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+    revalidatePath("/dashboard")
+}
+export const deleteTodos = async (id) => {
+    const session = await auth();
+    const tokenExpt = new Date(session.accessToken.expires_at)
+    if (tokenExpt < new Date) {
+        await signOut()
+        return
+    } else {
+        try {
+            const response = await fetch(`${API_URL}/todo/${id}`, {
+                method: "DELETE",
+                headers: {
+                    'Authorization': `Bearer ${session.accessToken.access_token}`
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            const json = await response.json();
+            return json
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+    revalidatePath("/dashboard")
+}
+export const createTodo = async (values) => {
+    const session = await auth();
+    const tokenExpt = new Date(session.accessToken.expires_at)
+    if (tokenExpt < new Date) {
+        await signOut()
+        return
+    } else {
+        try {
+            const response = await fetch(`${API_URL}/todo`, {
+                method: "Post",
+                headers: {
+                    'Authorization': `Bearer ${session.accessToken.access_token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(values),
+            });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            const json = await response.json();
+            revalidatePath("/dashboard")
+
+            return json
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+}
+export const updateTodo = async (values) => {
+    const session = await auth();
+    const tokenExpt = new Date(session.accessToken.expires_at)
+    if (tokenExpt < new Date) {
+        await signOut()
+        return
+    } else {
+        console.log(",AAAAAAAAAAAAAAA");
+
+        try {
+            const response = await fetch(`${API_URL}/todo/${values.id}`, {
+                method: "PUT",
+                headers: {
+                    'Authorization': `Bearer ${session.accessToken.access_token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(values),
+            });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            const json = await response.json();
+            return json
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+    revalidatePath(`/dashboard/${values.id}`)
 }

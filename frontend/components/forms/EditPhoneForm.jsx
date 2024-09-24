@@ -11,10 +11,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { ChangePhoneNumber } from "@/app/actions.";
-import { Separator } from "./ui/separator";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { changePhoneNumber } from "@/app/actions.";
+import { Separator } from "../ui/separator";
 
 const formSchema = z.object({
   phoneNumber: z
@@ -39,7 +39,7 @@ export const EditPhoneForm = () => {
     try {
       console.log(values);
 
-      ChangePhoneNumber(values.phoneNumber);
+      changePhoneNumber(values.phoneNumber);
       form.reset();
     } catch (error) {
       console.log(error);
@@ -55,7 +55,7 @@ export const EditPhoneForm = () => {
       <div className="flex flex-col gap-2">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="">
-            <div className="grid  gap-2">
+            <div className="grid gap-2">
               <FormField
                 control={form.control}
                 name="phoneNumber"
