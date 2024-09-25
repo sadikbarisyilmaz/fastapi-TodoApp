@@ -7,7 +7,7 @@ import { authConfig } from "./auth.config.ts";
 const { auth } = NextAuth(authConfig);
 export default auth((req) => {
     const { nextUrl } = req;
-    console.log(nextUrl.pathname);
+    console.log("MIDDLEEEE", req.auth);
 
     const isAuthenticated = !!req.auth;
     const isPublicRoute = PUBLIC_ROUTES.includes(nextUrl.pathname);

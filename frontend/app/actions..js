@@ -295,8 +295,6 @@ export const updateTodo = async (values) => {
         await signOut()
         return
     } else {
-        console.log(",AAAAAAAAAAAAAAA");
-
         try {
             const response = await fetch(`${API_URL}/todo/${values.id}`, {
                 method: "PUT",

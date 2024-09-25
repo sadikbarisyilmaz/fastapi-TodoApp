@@ -35,7 +35,6 @@ export const UpdateTodoForm = ({ todo }) => {
         message: "Must be smaller than 5",
       }),
     complete: z.boolean(),
-    id: z.string(),
   });
 
   const form = useForm({
@@ -46,12 +45,11 @@ export const UpdateTodoForm = ({ todo }) => {
       priority: todo.priority,
       complete: todo.complete,
       owner_id: todo.owner_id,
-      id: todo.id,
     },
   });
 
   async function onSubmit(values) {
-    console.log("asdasd");
+    values.id = todo.id;
     try {
       const res = await updateTodo(values);
     } catch (error) {
