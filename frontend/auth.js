@@ -47,12 +47,7 @@ const baseConfig = {
                 token.username = user.username
                 token.accessToken = user.accessToken
             }
-            else {
-                if (new Date(token.accessToken.expires_at) < new Date()) {
-                    token.accessToken.error = "expired"
-                    return token
-                }
-            }
+
             return token
         },
 

@@ -42,7 +42,7 @@ export const getUsers = async () => {
 }
 export const readAll = async () => {
     const session = await auth();
-    if (session.accessToken.error) {
+    if (new Date(session.accessToken.expires_at) < new Date()) {
         redirect(`/login`)
     } else {
         try {
@@ -110,7 +110,7 @@ export const token = async (username, password) => {
 // /users
 export const getUser = async () => {
     const session = await auth();
-    if (session.accessToken.error) {
+    if (new Date(session.accessToken.expires_at) < new Date()) {
         redirect(`/login`)
     } else {
         try {
@@ -131,7 +131,7 @@ export const getUser = async () => {
 }
 export const changePhoneNumber = async (num) => {
     const session = await auth();
-    if (session.accessToken.error) {
+    if (new Date(session.accessToken.expires_at) < new Date()) {
         redirect(`/login`)
     } else {
         try {
@@ -155,7 +155,7 @@ export const changePhoneNumber = async (num) => {
 }
 export const changePassword = async (values) => {
     const session = await auth();
-    if (session.accessToken.error) {
+    if (new Date(session.accessToken.expires_at) < new Date()) {
         redirect(`/login`)
     } else {
         try {
@@ -181,7 +181,7 @@ export const changePassword = async (values) => {
 // /todo
 export const getTodos = async () => {
     const session = await auth();
-    if (session.accessToken.error) {
+    if (new Date(session.accessToken.expires_at) < new Date()) {
         redirect(`/login`)
     } else {
         try {
@@ -203,7 +203,7 @@ export const getTodos = async () => {
 }
 export const getTodo = async (id) => {
     const session = await auth();
-    if (session.accessToken.error) {
+    if (new Date(session.accessToken.expires_at) < new Date()) {
         redirect(`/login`)
     } else {
         try {
@@ -225,7 +225,7 @@ export const getTodo = async (id) => {
 }
 export const deleteTodos = async (id) => {
     const session = await auth();
-    if (session.accessToken.error) {
+    if (new Date(session.accessToken.expires_at) < new Date()) {
         redirect(`/login`)
     } else {
         try {
@@ -248,7 +248,7 @@ export const deleteTodos = async (id) => {
 }
 export const createTodo = async (values) => {
     const session = await auth();
-    if (session.accessToken.error) {
+    if (new Date(session.accessToken.expires_at) < new Date()) {
         redirect(`/login`)
     } else {
         try {
@@ -274,7 +274,7 @@ export const createTodo = async (values) => {
 }
 export const updateTodo = async (values) => {
     const session = await auth();
-    if (session.accessToken.error) {
+    if (new Date(session.accessToken.expires_at) < new Date()) {
         redirect(`/login`)
     } else {
         console.log(",AAAAAAAAAAAAAAA");
