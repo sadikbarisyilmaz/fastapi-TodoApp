@@ -10,8 +10,11 @@ from models import Users
 from passlib.context import CryptContext
 from starlette import status
 from jose import jwt,JWTError
+from dotenv import load_dotenv
+import os
 
-SECRET_KEY  =   "f5e212419fa0d6f59ba4ae3ae9c7382154c914485264f62878649d766fd1b59d"
+load_dotenv()
+SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = "HS256"
 class CreateUserRequest(BaseModel):
   
