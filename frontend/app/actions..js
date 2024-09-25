@@ -3,7 +3,7 @@
 import { auth, signOut } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-const API_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = process.env.API_BASE_URL
 
 const checkAccessToken = async (accessToken) => {
     const tokenExpt = new Date(accessToken.expires_at)
@@ -15,7 +15,7 @@ const checkAccessToken = async (accessToken) => {
 }
 export const healtCheck = async () => {
     try {
-        const response = await fetch(`${API_URL}/healthy`);
+        const response = await fetch(`${API_BASE_URL}/healthy`);
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
@@ -29,7 +29,7 @@ export const healtCheck = async () => {
 // /admin
 export const getUsers = async () => {
     try {
-        const response = await fetch(`${API_URL}/auth`);
+        const response = await fetch(`${API_BASE_URL}/auth`);
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
@@ -46,7 +46,7 @@ export const readAll = async () => {
         redirect(`/login`)
     } else {
         try {
-            const response = await fetch(`${API_URL}/admin`, {
+            const response = await fetch(`${API_BASE_URL}/admin`, {
                 headers: {
                     'Authorization': `Bearer ${session.accessToken.access_token}`
                 },
@@ -69,7 +69,7 @@ export const dbLogin = async (username, password) => {
     payload.append("password", password);
 
     try {
-        const response = await fetch(`${API_URL}/auth/login`, {
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -90,7 +90,7 @@ export const token = async (username, password) => {
     payload.append("username", username);
     payload.append("password", password);
     try {
-        const response = await fetch(`${API_URL}/auth/token`, {
+        const response = await fetch(`${API_BASE_URL}/auth/token`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -114,7 +114,7 @@ export const getUser = async () => {
         redirect(`/login`)
     } else {
         try {
-            const response = await fetch(`${API_URL}/users`, {
+            const response = await fetch(`${API_BASE_URL}/users`, {
                 headers: {
                     'Authorization': `Bearer ${session.accessToken.access_token}`
                 },
@@ -135,7 +135,7 @@ export const changePhoneNumber = async (num) => {
         redirect(`/login`)
     } else {
         try {
-            const response = await fetch(`${API_URL}/users/phone/${num}`, {
+            const response = await fetch(`${API_BASE_URL}/users/phone/${num}`, {
                 method: "PUT",
                 headers: {
                     'Authorization': `Bearer ${session.accessToken.access_token}`
@@ -159,7 +159,7 @@ export const changePassword = async (values) => {
         redirect(`/login`)
     } else {
         try {
-            const response = await fetch(`${API_URL}/users`, {
+            const response = await fetch(`${API_BASE_URL}/users`, {
                 method: "PUT",
                 headers: {
                     'Authorization': `Bearer ${session.accessToken.access_token}`,
@@ -185,7 +185,7 @@ export const getTodos = async () => {
         redirect(`/login`)
     } else {
         try {
-            const response = await fetch(`${API_URL}/todo`, {
+            const response = await fetch(`${API_BASE_URL}/todo`, {
                 headers: {
                     'Authorization': `Bearer ${session.accessToken.access_token}`
                 },
@@ -207,7 +207,7 @@ export const getTodo = async (id) => {
         redirect(`/login`)
     } else {
         try {
-            const response = await fetch(`${API_URL}/todo/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/todo/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${session.accessToken.access_token}`
                 },
@@ -229,7 +229,7 @@ export const deleteTodos = async (id) => {
         redirect(`/login`)
     } else {
         try {
-            const response = await fetch(`${API_URL}/todo/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/todo/${id}`, {
                 method: "DELETE",
                 headers: {
                     'Authorization': `Bearer ${session.accessToken.access_token}`
@@ -252,7 +252,7 @@ export const createTodo = async (values) => {
         redirect(`/login`)
     } else {
         try {
-            const response = await fetch(`${API_URL}/todo`, {
+            const response = await fetch(`${API_BASE_URL}/todo`, {
                 method: "Post",
                 headers: {
                     'Authorization': `Bearer ${session.accessToken.access_token}`,
@@ -280,7 +280,7 @@ export const updateTodo = async (values) => {
         console.log(",AAAAAAAAAAAAAAA");
 
         try {
-            const response = await fetch(`${API_URL}/todo/${values.id}`, {
+            const response = await fetch(`${API_BASE_URL}/todo/${values.id}`, {
                 method: "PUT",
                 headers: {
                     'Authorization': `Bearer ${session.accessToken.access_token}`,
