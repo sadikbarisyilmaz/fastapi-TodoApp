@@ -7,6 +7,7 @@ import { authConfig } from "./auth.config.ts";
 
 const baseConfig = {
     ...authConfig,
+
     providers: [
         Credentials({
             // You can specify which fields should be submitted, by adding keys to the `credentials` object.
@@ -40,15 +41,21 @@ const baseConfig = {
     ],
     callbacks: {
         jwt({ token, user, account }) {
-
             if (user) { // User is available during sign-in
                 token.id = user.id
                 token.role = user.role
                 token.username = user.username
                 token.accessToken = user.accessToken
             }
+            else {
+                if (new Date(token.accessToken.expires_at) < new Date()) {
+                    token.accessToken.error = "expired"
+                    return token
+                }
+            }
             return token
         },
+
 
     },
 };
@@ -58,14 +65,6 @@ const serverConfig = {
     callbacks: {
         ...baseConfig.callbacks,
         session({ session, token }) {
-            // const tokenExpt = new Date(token.accessToken.expires_at)
-            // if (tokenExpt < new Date) {
-            //     console.log("expired");
-
-            //     session = null
-            //     return session
-            // } else {
-
             session.user.id = token.id
             session.user.role = token.role
             session.accessToken = token.accessToken

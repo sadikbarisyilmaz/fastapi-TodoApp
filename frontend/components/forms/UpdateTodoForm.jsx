@@ -17,8 +17,10 @@ import {
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { updateTodo } from "@/app/actions.";
+import { useRouter } from "next/navigation";
 
 export const UpdateTodoForm = ({ todo }) => {
+  const router = useRouter();
   const todoSchema = z.object({
     title: z.string().min(5, {
       message: "Must be at least 5 characters.",
@@ -52,6 +54,7 @@ export const UpdateTodoForm = ({ todo }) => {
     values.id = todo.id;
     try {
       const res = await updateTodo(values);
+      router.push("/dashboard");
     } catch (error) {
       console.error("Error submitting form:", error);
     }

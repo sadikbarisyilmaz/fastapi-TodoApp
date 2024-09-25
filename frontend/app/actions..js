@@ -2,6 +2,7 @@
 
 import { auth, signOut } from "@/auth";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 const API_URL = "http://127.0.0.1:8000";
 
 const checkAccessToken = async (accessToken) => {
@@ -9,7 +10,6 @@ const checkAccessToken = async (accessToken) => {
     if (tokenExpt < new Date) {
         console.log("expired");
         await signOut()
-
         return session
     }
 }
@@ -42,10 +42,8 @@ export const getUsers = async () => {
 }
 export const readAll = async () => {
     const session = await auth();
-    const tokenExpt = new Date(session.accessToken.expires_at)
-    if (tokenExpt < new Date) {
-        await signOut()
-        return
+    if (session.accessToken.error) {
+        redirect(`/login`)
     } else {
         try {
             const response = await fetch(`${API_URL}/admin`, {
@@ -112,10 +110,8 @@ export const token = async (username, password) => {
 // /users
 export const getUser = async () => {
     const session = await auth();
-    const tokenExpt = new Date(session.accessToken.expires_at)
-    if (tokenExpt < new Date) {
-        await signOut()
-        return
+    if (session.accessToken.error) {
+        redirect(`/login`)
     } else {
         try {
             const response = await fetch(`${API_URL}/users`, {
@@ -135,10 +131,8 @@ export const getUser = async () => {
 }
 export const changePhoneNumber = async (num) => {
     const session = await auth();
-    const tokenExpt = new Date(session.accessToken.expires_at)
-    if (tokenExpt < new Date) {
-        await signOut()
-        return
+    if (session.accessToken.error) {
+        redirect(`/login`)
     } else {
         try {
             const response = await fetch(`${API_URL}/users/phone/${num}`, {
@@ -161,10 +155,8 @@ export const changePhoneNumber = async (num) => {
 }
 export const changePassword = async (values) => {
     const session = await auth();
-    const tokenExpt = new Date(session.accessToken.expires_at)
-    if (tokenExpt < new Date) {
-        await signOut()
-        return
+    if (session.accessToken.error) {
+        redirect(`/login`)
     } else {
         try {
             const response = await fetch(`${API_URL}/users`, {
@@ -189,10 +181,8 @@ export const changePassword = async (values) => {
 // /todo
 export const getTodos = async () => {
     const session = await auth();
-    const tokenExpt = new Date(session.accessToken.expires_at)
-    if (tokenExpt < new Date) {
-        await signOut()
-        return
+    if (session.accessToken.error) {
+        redirect(`/login`)
     } else {
         try {
             const response = await fetch(`${API_URL}/todo`, {
@@ -213,10 +203,8 @@ export const getTodos = async () => {
 }
 export const getTodo = async (id) => {
     const session = await auth();
-    const tokenExpt = new Date(session.accessToken.expires_at)
-    if (tokenExpt < new Date) {
-        await signOut()
-        return
+    if (session.accessToken.error) {
+        redirect(`/login`)
     } else {
         try {
             const response = await fetch(`${API_URL}/todo/${id}`, {
@@ -237,10 +225,8 @@ export const getTodo = async (id) => {
 }
 export const deleteTodos = async (id) => {
     const session = await auth();
-    const tokenExpt = new Date(session.accessToken.expires_at)
-    if (tokenExpt < new Date) {
-        await signOut()
-        return
+    if (session.accessToken.error) {
+        redirect(`/login`)
     } else {
         try {
             const response = await fetch(`${API_URL}/todo/${id}`, {
@@ -262,10 +248,8 @@ export const deleteTodos = async (id) => {
 }
 export const createTodo = async (values) => {
     const session = await auth();
-    const tokenExpt = new Date(session.accessToken.expires_at)
-    if (tokenExpt < new Date) {
-        await signOut()
-        return
+    if (session.accessToken.error) {
+        redirect(`/login`)
     } else {
         try {
             const response = await fetch(`${API_URL}/todo`, {
@@ -290,11 +274,11 @@ export const createTodo = async (values) => {
 }
 export const updateTodo = async (values) => {
     const session = await auth();
-    const tokenExpt = new Date(session.accessToken.expires_at)
-    if (tokenExpt < new Date) {
-        await signOut()
-        return
+    if (session.accessToken.error) {
+        redirect(`/login`)
     } else {
+        console.log(",AAAAAAAAAAAAAAA");
+
         try {
             const response = await fetch(`${API_URL}/todo/${values.id}`, {
                 method: "PUT",
