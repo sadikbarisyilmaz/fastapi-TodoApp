@@ -1,0 +1,9 @@
+node_modules
+.next
+
+.env
+__pycache__/
+.idea
+.env
+.en.local
+.venv

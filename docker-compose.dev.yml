@@ -1,0 +1,50 @@
+services:
+
+  fastapi:
+    image: fastapi
+    container_name: fastapi_app
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres
+    environment:
+      SQLALCHEMY_DATABASE_URL: postgresql://user:password@172.18.0.2/database
+      SECRET_KEY: f5e212419fa0d6f59ba4ae3ae9c7382154c914485264f62878649d766fd1b59d
+    networks:
+      - app-network
+
+  nextjs:
+      image: nextjs  # Replace with your actual image name
+      build:
+        context: ./frontend  # Path to your Next.js app
+        dockerfile: Dockerfile  # Specify Dockerfile if it's named differently
+      ports:
+        - "3000:3000"  # Expose the port your Next.js app is running on
+      depends_on:
+        - postgres
+      environment:
+        NODE_ENV: production  # Set any environment variables your app needs
+        API_BASE_URL: http://0.0.0.0:80
+        AUTH_SECRET: "KrNV3Wbp00artbKIxOLXphJykAQoIe+LmULX3n+opLg="
+      # volumes:
+      #   - ./path_to_your_nextjs_app:/app  # Mount local app for live updates (if needed)
+
+  postgres:
+    image: postgres
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: database
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
