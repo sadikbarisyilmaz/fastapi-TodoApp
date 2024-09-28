@@ -22,7 +22,7 @@ export default async function Page() {
         <h2 className="text-xl font-bold">Todos</h2>
         {todos.map((todo, i) => {
           return (
-            <li className="pl-3" id={i}>
+            <li className="pl-3" key={i}>
               {todo.title}
               <DeleteTodoButton id={todo.id} />
               <Link href={`/dashboard/${todo.id}`}>Edit</Link>

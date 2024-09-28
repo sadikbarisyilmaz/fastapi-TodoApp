@@ -24,10 +24,11 @@ services:
         - postgres
       environment:
         NODE_ENV: production  # Set any environment variables your app needs
-        API_BASE_URL: http://0.0.0.0:80
+        API_BASE_URL: http://172.18.0.1
         AUTH_SECRET: "KrNV3Wbp00artbKIxOLXphJykAQoIe+LmULX3n+opLg="
-      # volumes:
-      #   - ./path_to_your_nextjs_app:/app  # Mount local app for live updates (if needed)
+        AUTH_URL: http://localhost:3000
+      networks:
+        - app-network
 
   postgres:
     image: postgres
